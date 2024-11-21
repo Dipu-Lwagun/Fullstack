@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Issue {
+  id         Int       @id @default(autoincrement())
+  brand      String
+  model      String
+  issuetitle String
+  issue_des  String
+  category   Category
+  issuetype  IssueType
+  photos     Photo[] // Related model for storing multiple photos
+  createdAt  DateTime  @default(now())
+}
+
+model Photo {
+  id      Int    @id @default(autoincrement())
+  issueId Int
+  url     String // You can store the file path or URL of the image
+  issue   Issue  @relation(fields: [issueId], references: [id])
+}
+
+enum Category {
+  LAPTOP
+  DESKTOP
+}
+
+enum IssueType {
+  HARDWARE
+  SOFTWARE
+}
